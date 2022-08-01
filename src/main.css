@@ -15,6 +15,9 @@
     padding: 5vh 3vw;;
     box-shadow: rgb(0 0 0 / 16%) 1px 1px 10px;
 }
+#loginPage .loginTab {
+    margin-bottom: 4vh;
+}
 #loginPage h1 {
     font-weight: bold;
     color: #5380f1;

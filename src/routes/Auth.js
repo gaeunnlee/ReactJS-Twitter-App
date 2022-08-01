@@ -3,12 +3,15 @@ import React, {useState} from "react"
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
+import { Alert } from "react-bootstrap";
+import Nav from 'react-bootstrap/Nav';
 
 
 const Auth = () => {
     const [email,setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [newAccount, setNewAccount] = useState(true);
+    const [error, setError] = useState("");
     const onChange = (event) => {
         const {target: {name, value}} = event;
         if (name === "email") {
@@ -31,14 +34,30 @@ const Auth = () => {
         } 
         
         catch (error) {
-            console.log(error);
+            setError(error.message);
         }
     }
+
+    const clickCreateAccount = () => setNewAccount (true);
+    const clickSignIn = () => setNewAccount (false);
+
     return (
         <div id="loginPage">
             <div id="loginForm">
+                <Nav
+                 variant="pills"
+                 defaultActiveKey="1"
+                 className="justify-content-center loginTab" 
+                >
+                <Nav.Item>
+                    <Nav.Link onClick={clickCreateAccount} eventKey="1">Create Account</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link onClick={clickSignIn} eventKey="2">Sign in</Nav.Link>
+                </Nav.Item>
+                </Nav>
                 <h1>
-                {newAccount ? "Create Account" : "Sign In"}
+                {newAccount ? "Create Account" : "Sign in"}
                 </h1>
                 <Form onSubmit={onSubmit}>
                     <div className="text-center mb-3">
@@ -95,6 +114,14 @@ const Auth = () => {
                     <Form.Group className="mb-3" controlId="formBasicCheckbox">
                         <Form.Check type="checkbox" label="Check me out" />
                     </Form.Group>
+                    {(error).length == 0 
+                        ? null 
+                        : 
+                        <Alert variant="danger">
+                            {error}
+                        </Alert>
+                    }
+
                     <Button 
                         variant="primary" 
                         type="submit"
@@ -104,6 +131,7 @@ const Auth = () => {
                     </Button>
                 </Form>
             </div>
+
         </div>       
     )
 }
