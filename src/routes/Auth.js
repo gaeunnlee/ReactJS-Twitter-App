@@ -1,10 +1,16 @@
-import { getAuth, createUserWithEmailAndPassword,signInWithEmailAndPassword } from "firebase/auth";
+import { 
+    getAuth, 
+    createUserWithEmailAndPassword,signInWithEmailAndPassword, 
+    signInWithPopup, 
+    GoogleAuthProvider 
+} from "firebase/auth";
 import React, {useState} from "react"
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import { Alert } from "react-bootstrap";
 import Nav from 'react-bootstrap/Nav';
+import { authService, firebaseInstance } from "fbase";
 
 
 const Auth = () => {
@@ -30,7 +36,7 @@ const Auth = () => {
             } else {
                 data = await signInWithEmailAndPassword(auth, email, password)
             }
-            console.log(data)
+            //console.log(data)
         } 
         
         catch (error) {
@@ -40,6 +46,31 @@ const Auth = () => {
 
     const clickCreateAccount = () => setNewAccount (true);
     const clickSignIn = () => setNewAccount (false);
+
+    const onSocialClick = async (event) => {
+        const auth = getAuth();
+        const {
+            target: { name },
+        } = event;
+        if (name === "google") {
+            const provider = new GoogleAuthProvider();
+            signInWithPopup(auth, provider)
+            .then((result) => {
+              const credential = GoogleAuthProvider.credentialFromResult(result);
+              const token = credential.accessToken;
+              const user = result.user;
+            }).catch((error) => {
+              const errorCode = error.code;
+              const errorMessage = error.message;
+              const email = error.customData.email;
+              const credential = GoogleAuthProvider.credentialFromError(error);
+            });
+        } else if (name === "github") {
+           
+        }
+        //const data = await auth.signInWithPopup(provider);
+        //console.log(data);
+    }
 
     return (
         <div id="loginPage">
@@ -61,20 +92,20 @@ const Auth = () => {
                 </h1>
                 <Form onSubmit={onSubmit}>
                     <div className="text-center mb-3">
-                        <p>{newAccount ? "Create account with:" : "Sign in with:"}</p>
-                        <Button className="btn-link btn-floating mx-1">
+                        <p>{newAccount ? "Create Account with:" : "Sign in with:"}</p>
+                        <Button onClick={onSocialClick} name="facebook" className="btn-link btn-floating mx-1">
                             <i className="bi-facebook"></i>
                         </Button>
 
-                        <Button className="btn-link btn-floating mx-1">
+                        <Button onClick={onSocialClick} name="google" className="btn-link btn-floating mx-1">
                             <i className="bi-google"></i>
                         </Button>
 
-                        <Button className="btn-link btn-floating mx-1">
+                        <Button onClick={onSocialClick} name="twitter" className="btn-link btn-floating mx-1">
                             <i className="bi-twitter"></i>
                         </Button>
 
-                        <Button className="btn-link btn-floating mx-1">
+                        <Button onClick={onSocialClick} name="github" className="btn-link btn-floating mx-1">
                             <i className="bi-github"></i>
                         </Button>
                     </div>
@@ -114,7 +145,7 @@ const Auth = () => {
                     <Form.Group className="mb-3" controlId="formBasicCheckbox">
                         <Form.Check type="checkbox" label="Check me out" />
                     </Form.Group>
-                    {(error).length == 0 
+                    {(error).length === 0 
                         ? null 
                         : 
                         <Alert variant="danger">
@@ -127,7 +158,7 @@ const Auth = () => {
                         type="submit"
                         className="btn btn-primary btn-block mb-3"
                     >
-                        {newAccount ? "Create Account" : "Log In"}                  
+                        {newAccount ? "Create Account" : "Sign In"}                  
                     </Button>
                 </Form>
             </div>
