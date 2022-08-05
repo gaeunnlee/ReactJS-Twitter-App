@@ -98,7 +98,7 @@ const Auth = () => {
                         </Button>
 
                         <Button onClick={onSocialClick} name="google" className="btn-link btn-floating mx-1">
-                            <i className="bi-google"></i>
+                            <i className="bi-google" name="google" onClick={onSocialClick} ></i>
                         </Button>
 
                         <Button onClick={onSocialClick} name="twitter" className="btn-link btn-floating mx-1">

@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 
 const Navigation = () => { return (
     <Nav variant="pills" defaultActiveKey="/">
-          
         <Nav.Item >
             <Nav.Link as={Link} to="/ReactJS-Twitter-App" >
                 Home
