@@ -1,10 +1,28 @@
-import React, { useState } from "react"
-import { Form, Button } from "react-bootstrap";
+import React, { useEffect, useState } from "react"
+import { Form, Button, Card } from "react-bootstrap";
 import { dbService } from "fbase";
-import { collection, addDoc, setDoc } from "firebase/firestore";
+import { collection, addDoc, setDoc, getDocs, doc } from "firebase/firestore";
+import styles from "styles/Home.module.css";
 
 const Home = () => {
     const [tweet, setTweet] = useState("")
+    const [tweets, setTweets] = useState([])
+    async function getTweets() {
+      const dbTweets = await getDocs(collection(dbService, "tweets"));
+      dbTweets.forEach((doc) => {
+        const tweetObject = {
+          ...doc.data(),
+          id: doc.id,
+
+        }
+        setTweets((prev) => [tweetObject, ... prev])
+      });
+    }
+    
+    useEffect(() => {
+      getTweets()
+    },[])
+    console.log(tweets)
     async function onSubmit (event) {
         event.preventDefault();
         const docRef = await addDoc(collection(dbService, "tweets"), {
@@ -19,6 +37,7 @@ const Home = () => {
         setTweet(tweet);
     }
     return (
+      <>
         <Form onSubmit={onSubmit}>
         <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
           <Form.Label>
@@ -30,6 +49,15 @@ const Home = () => {
         Submit
       </Button>
       </Form>
+      <Card className={styles.tweet_box}>
+        {tweets.map((tweet) => (
+          <Card.Body key={tweet.id}>
+            <p>{tweet.tweet}</p>
+          </Card.Body>
+        ))}
+      </Card>
+      </>
+
     )
 };
 export default Home;
