@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/ReactJS-Twitter-App/static/css/main.17777e4d.css",
+    "main.js": "/ReactJS-Twitter-App/static/js/main.370e037f.js",
+    "index.html": "/ReactJS-Twitter-App/index.html",
+    "main.17777e4d.css.map": "/ReactJS-Twitter-App/static/css/main.17777e4d.css.map",
+    "main.370e037f.js.map": "/ReactJS-Twitter-App/static/js/main.370e037f.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.17777e4d.css",
+    "static/js/main.370e037f.js"
+  ]
+}
