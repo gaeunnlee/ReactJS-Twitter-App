@@ -1,21 +1,24 @@
 import React, { useEffect, useState } from "react"
 import { Form, Button, Card } from "react-bootstrap";
 import { dbService } from "fbase";
-import { collection, addDoc, setDoc, getDocs, doc } from "firebase/firestore";
+import { collection, addDoc, setDoc, getDocs, doc, query, orderBy,serverTimestamp  } from "firebase/firestore";
 import styles from "styles/Home.module.css";
 
 const Home = () => {
     const [tweet, setTweet] = useState("")
     const [tweets, setTweets] = useState([])
     async function getTweets() {
-      const dbTweets = await getDocs(collection(dbService, "tweets"));
+      const dbTweets = await getDocs(
+        query(collection(dbService, "tweets"),orderBy("timestamp", "asc"))
+      );
       dbTweets.forEach((doc) => {
         const tweetObject = {
           ...doc.data(),
           id: doc.id,
-
         }
-        setTweets((prev) => [tweetObject, ... prev])
+        setTweets(
+          (prev) => [tweetObject, ... prev]
+        )
       });
     }
     
@@ -27,12 +30,12 @@ const Home = () => {
         event.preventDefault();
         const docRef = await addDoc(collection(dbService, "tweets"), {
           tweet,
-          createdAt: Date.now(),
+          timestamp: serverTimestamp(),
         });
         console.log("Document written with ID: ", docRef.id);
         setTweet("");
     }
-    const onChange = (event) => {
+    const onChange = (event) => { 
         let tweet = event.target.value;
         setTweet(tweet);
     }
@@ -43,7 +46,7 @@ const Home = () => {
           <Form.Label>
             <h2>Tweet</h2>
           </Form.Label>
-          <Form.Control value={tweet} onChange={onChange} as="input" placeholder="What's happening?" />
+          <Form.Control value={tweet} onChange={onChange} as="input" placeholder="What's happening?" autoComplete="off"/>
         </Form.Group>
         <Button variant="primary" type="submit">
         Submit
